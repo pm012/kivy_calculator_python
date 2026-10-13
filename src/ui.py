@@ -111,7 +111,7 @@ class CalculatorUI(BoxLayout):
         self.mode_panel.clear_widgets()
         modes = [("Basic", "basic"), ("Scientific", "scientific"), ("Programmer", "programmer")]
         
-        # Кнопки перемикання режимів (займають більшість ширини)
+        # Switch modes button (take the most of the width)
         for label, mode_key in modes:
             btn = Button(
                 text=label,

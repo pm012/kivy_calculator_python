@@ -202,7 +202,7 @@ class CalculatorEngine:
         try:
             clean_str = value_str.strip().lower()
             
-            # Підтримка читання 0x/0X, 0b/0B, 0o/0O
+            # Support of reading 0x/0X, 0b/0B, 0o/0O
             if clean_str.startswith(("0x", "0b", "0o")):
                 val = int(clean_str, 0)
             else:

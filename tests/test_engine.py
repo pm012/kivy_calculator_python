@@ -51,7 +51,7 @@ def test_safe_evaluator_basic():
 
 def test_safe_evaluator_invalid_expr():
     evaluator = SafeEvaluator()
-    # "2 + * 2" є невалідним виразом для AST
+    # "2 + * 2" is note valid for AST
     with pytest.raises(ValueError):
         evaluator.eval("2 + * 2")
 
@@ -90,7 +90,7 @@ def test_repeat_equal_operation(engine):
 
 def test_safe_evaluator_unsupported_constant():
     evaluator = SafeEvaluator()
-    # Текст замість числа у вузлі
+    # Text instead of number 
     with pytest.raises(ValueError, match="Unsupported constant type"):
         evaluator.eval("'hello'")
 
@@ -156,7 +156,7 @@ def test_engine_errors(engine):
 def test_engine_programmer_chained_conversions(engine):
     # 26 -> HEX -> OCT -> BIN
     hex_val = engine.execute_programmer_unary("HEX", "26")
-    assert hex_val == "0X1A"  # Оновлено префікс на 0X
+    assert hex_val == "0X1A"  # Update prefix to  0X
     
     oct_val = engine.execute_programmer_unary("OCT", hex_val)
     assert oct_val == "0o32"

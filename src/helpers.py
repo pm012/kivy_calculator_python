@@ -31,7 +31,7 @@ def extract_last_operand(expression: str) -> tuple[str, str]:
         # If the parenthesis is unmatched, take the whole expression as the operand
         return "", expr
 
-    # Випадок 2: Вираз закінчується числом (включаючи дробові)
+    # Case 2: The expression ends with a number (including fractional(decimals))
     match = re.search(r'(\d+(?:\.\d+)?)$', expr)
     if match:
         start_idx = match.start(1)

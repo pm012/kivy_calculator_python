@@ -1,5 +1,4 @@
 # src/strategies/programmer.py
-import math
 from src.strategies.base import OperationStrategy
 
 
