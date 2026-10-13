@@ -122,11 +122,11 @@ class CalculatorUI(BoxLayout):
             btn.bind(on_press=lambda instance, m=mode_key: self.set_mode(m))
             self.mode_panel.add_widget(btn)
 
-        # Компактна кнопка "?" (About) справа на панелі режимів
+        # Small button "?" (About) to the right on the mode panel
         about_btn = Button(
             text="?",
             font_size=16,
-            size_hint_x=0.2,  # Вужчий розмір для збалансованого вигляду
+            size_hint_x=0.2,  # Thiner for balanced view
             background_color=[0.4, 0.4, 0.4, 1]
         )
         about_btn.bind(on_release=self.show_about_popup)
@@ -141,7 +141,7 @@ class CalculatorUI(BoxLayout):
             sci_grid = GridLayout(cols=3, spacing=5, size_hint_y=0.3)
             sci_buttons = ['sin', 'cos', 'tan', 'log', 'ln', 'sqrt', '^', '(', ')']
             for btn_text in sci_buttons:
-                button = Button(text=btn_text, font_size=18, background_color=[0.4, 0.4, 0.6, 1], on_press=self.button_click)
+                button = Button(text=btn_text, font_size=18, background_color=[0.012, 0.624, 0.773, 1], on_press=self.button_click)
                 sci_grid.add_widget(button)
             self.keypad_container.add_widget(sci_grid)
 
@@ -181,11 +181,42 @@ class CalculatorUI(BoxLayout):
         return [0.3, 0.3, 0.3, 1]
 
     def button_click(self, instance):
-        text = instance.text
+        self.handle_input(instance.text)
+
+    def on_key_down(self, window, keycode, *args):
+        key_name = keycode[1] if isinstance(keycode, tuple) else keycode
+
+        if key_name in {"escape", "esc", 27}:
+            self.handle_input("C")
+            return True
+        if key_name in {"enter", "numpadenter", "kp_enter", 13, 1073741912}:
+            self.handle_input("=")
+            return True
+        if key_name in {"backspace", "8", 8}:
+            self.handle_input("BACKSPACE")
+            return True
+
+        return False
+
+    def on_textinput(self, window, text: str):
+        accepted_characters = set("0123456789.+-*/^%()")
+        handled = False
+        for character in text:
+            if character in accepted_characters:
+                self.handle_input(character)
+                handled = True
+        return handled
+
+    def handle_input(self, text: str):
 
         if text == "C":
             self.result.text = "0"
             self.engine = CalculatorEngine()
+        elif text == "BACKSPACE":
+            if self.result.text == "ERROR":
+                self.result.text = "0"
+            elif self.result.text not in {"", "0"}:
+                self.result.text = self.result.text[:-1] or "0"
         elif text == "=":
             self.result.text = self.engine.evaluate(self.result.text)
         elif text == "+/-":
@@ -250,7 +281,9 @@ class CalculatorUI(BoxLayout):
             self.append_text(text)
 
     def append_text(self, text: str):
-        if self.result.text in {"0", "ERROR"} and text not in {"+", "-", "*", "/", ".", "^", ")", "(", "AND", "OR", "XOR", "<<", ">>", "MOD"}:
+        if self.result.text in {"0", "ERROR"} and text == "(":
+            self.result.text = "("
+        elif self.result.text in {"0", "ERROR"} and text not in {"+", "-", "*", "/", ".", "^", ")", "AND", "OR", "XOR", "<<", ">>", "MOD"}:
             self.result.text = text
         else:
             self.result.text += text

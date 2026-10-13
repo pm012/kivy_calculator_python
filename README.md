@@ -57,6 +57,11 @@ kiwi_mobile/
 
 # Launch and setup manual
 
+*Prerequisites:* For Linux based distribution it may be required to install buffer handling program (e.g. xclip)
+```bash
+sudo apt install xclip
+```
+
 ## Usage on PC
 
 1. Install poetry and run: 
@@ -70,6 +75,10 @@ poetry install
 ```bash
 poetry run python main.py
 ```
+
+When running on a PC, the keyboard can be used to enter digits, decimal points,
+`+`, `-`, `*`, `/`, `^`, parentheses, and `%` (same behavior as the percent button).
+Press `Enter` to calculate, `Backspace` to delete the last character, and `Escape` to clear.
 
 3. To run tests for the application with comprehencive report do the following:
 
@@ -144,6 +153,3 @@ title=Calculator
 author=pm012
 orientation=portrait
 ```
-
-
-

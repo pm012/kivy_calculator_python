@@ -41,6 +41,75 @@ def test_ui_button_click_operations(ui):
     assert ui.result.text == "8"
 
 
+def test_ui_keyboard_numbers_operations_and_enter(ui):
+    assert ui.on_textinput(None, "1+3") is True
+    assert ui.on_key_down(None, 13, 40, "\r", []) is True
+
+    assert ui.result.text == "4"
+
+
+def test_ui_sdl_keyboard_event_signature(ui):
+    assert ui.on_textinput(None, "1+3") is True
+    assert ui.on_key_down(None, 13, 40, "\r", []) is True
+
+    assert ui.result.text == "4"
+
+    assert ui.on_key_down(None, 27, 41, "", []) is True
+    assert ui.result.text == "0"
+
+
+def test_ui_keyboard_other_arithmetic_operators_and_decimal(ui):
+    assert ui.on_textinput(None, "8*2/4+0.5") is True
+    assert ui.on_key_down(None, 13, 40, "\r", []) is True
+
+    assert ui.result.text == "4.5"
+
+
+def test_ui_keyboard_power_operator(ui):
+    assert ui.on_textinput(None, "2^3") is True
+    assert ui.on_key_down(None, 13, 40, "\r", []) is True
+
+    assert ui.result.text == "8"
+
+
+def test_ui_keyboard_parentheses_and_percent(ui):
+    assert ui.on_textinput(None, "(1+2)") is True
+
+    assert ui.result.text == "(1+2)"
+    ui.on_key_down(None, 13, 40, "\r", [])
+    assert ui.result.text == "3"
+    ui.on_key_down(None, 27, 41, "", [])
+    ui.on_textinput(None, "3%")
+    assert ui.result.text == "0.03"
+
+
+def test_ui_keyboard_escape_clears_and_unhandled_key_is_ignored(ui):
+    ui.result.text = "12+3"
+
+    assert ui.on_key_down(None, 27, 41, "", []) is True
+    assert ui.result.text == "0"
+
+    assert ui.on_key_down(None, 65, 4, "a", []) is False
+    assert ui.result.text == "0"
+
+
+def test_ui_keyboard_backspace_deletes_expression(ui):
+    ui.on_textinput(None, "(12+3)")
+
+    assert ui.on_key_down(None, 8, 42, "\b", []) is True
+    assert ui.result.text == "(12+3"
+
+    ui.result.text = "7"
+    assert ui.on_key_down(None, (8, "backspace"), "\b", []) is True
+    assert ui.result.text == "0"
+
+
+def test_ui_textinput_ignores_unsupported_characters(ui):
+    assert ui.on_textinput(None, "1a+2") is True
+    assert ui.result.text == "1+2"
+    assert ui.on_textinput(None, "abc") is False
+
+
 def test_ui_toggle_sign_and_percent(ui):
     ui.button_click(MockButton("9"))
     
